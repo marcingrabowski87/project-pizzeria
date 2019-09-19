@@ -57,6 +57,7 @@
       this.data = data;
       const thisProduct = this;
       thisProduct.renderInMenu();
+      thisProduct.initAccordion();
       /* console.log('new Product:', thisProduct); */
     }
     renderInMenu() {
@@ -67,6 +68,37 @@
       menuContainer.appendChild(thisProduct.element);
       /* console.log(menuContainer); */
     }
+    initAccordion() {
+      const thisProduct = this;
+      const accordionButton = document.querySelectorAll(select.menuProduct.clickable);
+      const boxForProducts = document.querySelectorAll('#product-list > .product');
+      /* console.log(accordionButton); */
+
+      for (let x of accordionButton) {
+        /* console.log(x); */
+        x.addEventListener('click', function (e) {
+          const ProductsActive = document.querySelectorAll('#product-list .product.active');
+          console.log("x", thisProduct.element);
+          for (let y of ProductsActive) {
+            if (thisProduct.element === y)
+              console.log("y=", y);
+          }
+          /*  console.log(ProductsActive); */
+          e.preventDefault();
+          /*  console.log(this.id); */
+          /* console.log("boxForProducts", boxForProducts); */
+          thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
+
+
+          /* thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive); */
+          /* console.log(thisProduct.element); */
+
+          /* console.log(x.parentElement); */
+
+        });
+      }
+    }
+
   }
 
 
@@ -75,7 +107,7 @@
 
     initMenu: function () {
       const thisApp = this;
-      console.log('thisApp.data', thisApp.data);
+      /* console.log('thisApp.data', thisApp.data); */
       for (let productData in thisApp.data.products) {
         new Product(productData, thisApp.data.products[productData]);
 
@@ -87,11 +119,11 @@
     },
     init: function () {
       const thisApp = this;
-      console.log('*** App starting ***');
+      /* console.log('*** App starting ***');
       console.log('thisApp:', thisApp);
       console.log('classNames:', classNames);
       console.log('settings:', settings);
-      console.log('templates:', templates);
+      console.log('templates:', templates); */
       thisApp.initData();
       thisApp.initMenu();
 
