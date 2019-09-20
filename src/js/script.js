@@ -40,13 +40,13 @@
     },
   };
 
-  const settings = {
-    amountWidget: {
-      defaultValue: 1,
-      defaultMin: 1,
-      defaultMax: 9,
-    }
-  };
+  /*  const settings = {
+     amountWidget: {
+       defaultValue: 1,
+       defaultMin: 1,
+       defaultMax: 9,
+     }
+   }; */
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -75,25 +75,16 @@
       /* console.log(accordionButton); */
 
       for (let x of accordionButton) {
-        /* console.log(x); */
+
         x.addEventListener('click', function (e) {
-          const ProductsActive = document.querySelectorAll('#product-list .product.active');
-          console.log("x", thisProduct.element);
-          for (let y of ProductsActive) {
-            if (thisProduct.element === y)
-              console.log("y=", y);
-          }
-          /*  console.log(ProductsActive); */
           e.preventDefault();
-          /*  console.log(this.id); */
-          /* console.log("boxForProducts", boxForProducts); */
+
           thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
-
-
-          /* thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive); */
-          /* console.log(thisProduct.element); */
-
-          /* console.log(x.parentElement); */
+          const ProductsActive = document.querySelectorAll('#product-list .product.active');
+          for (let y of ProductsActive) {
+            if (y !== thisProduct.element)
+              thisProduct.element.classList.remove('active');
+          }
 
         });
       }
