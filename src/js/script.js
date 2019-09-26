@@ -1,5 +1,5 @@
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
-
+/* "test:html": "globstar nu-html-checker dist/*.html", */
 {
   'use strict';
 
@@ -40,13 +40,13 @@
     },
   };
 
-  /*  const settings = {
-     amountWidget: {
-       defaultValue: 1,
-       defaultMin: 1,
-       defaultMax: 9,
-     }
-   }; */
+  const settings = {
+    amountWidget: {
+      defaultValue: 1,
+      defaultMin: 1,
+      defaultMax: 9,
+    }
+  };
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -57,7 +57,10 @@
       this.data = data;
       const thisProduct = this;
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
 
     }
     renderInMenu() {
@@ -68,22 +71,98 @@
       menuContainer.appendChild(thisProduct.element);
 
     }
+    getElements() {
+      const thisProduct = this;
+
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+
+    }
+
     initAccordion() {
       const thisProduct = this;
-      const accordionButton = thisProduct.element.querySelector(select.menuProduct.clickable);
 
-      accordionButton.addEventListener('click', function (e) {
+
+      thisProduct.accordionTrigger.addEventListener('click', function (e) {
         e.preventDefault();
 
         thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
         const ProductsActive = document.querySelectorAll('#product-list .product.active');
+
         for (let actualProduct of ProductsActive) {
-          if (actualProduct !== thisProduct.element)
+          if (actualProduct !== thisProduct.element) {
+
             actualProduct.classList.remove('active');
+          }
         }
 
       });
     }
+    initOrderForm() {
+      const thisProduct = this;
+      thisProduct.form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        thisProduct.prcessOrder();
+      });
+      for (let input of thisProduct.formInputs) {
+        input.addEventListener('change', function () {
+          thisProduct.processOrder();
+
+        });
+      }
+      thisProduct.cartButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+    }
+    processOrder() {
+
+      const thisProduct = this;
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      /*
+            let price = thisProduct.data.price; */
+      let price = thisProduct.data.price;
+
+      for (let paramId in thisProduct.data.params) {
+        /* console.log(paramId); */
+        const param = {
+          paramId: thisProduct.data.params
+        }
+        for (let optionId in thisProduct.data.params[paramId].options) {
+
+
+
+
+          const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
+
+          const option = {
+            optionId: thisProduct.data.params[paramId].options
+          };
+
+          let chooseProductPrice = option.optionId[optionId].price;
+
+
+          if (optionSelected && !option.defualt) {
+            price += chooseProductPrice;
+          }
+          if (option.defualt) {
+            price -= chooseProductPrice;
+
+          }
+
+        }
+      }
+
+      thisProduct.priceElem.innerHTML = price;
+    }
+
+
+
+
+
 
 
   }
