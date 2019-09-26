@@ -122,18 +122,15 @@
 
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
-      /*
-            let price = thisProduct.data.price; */
+
       let price = thisProduct.data.price;
 
       for (let paramId in thisProduct.data.params) {
-        /* console.log(paramId); */
+
         const param = {
           paramId: thisProduct.data.params
         }
         for (let optionId in thisProduct.data.params[paramId].options) {
-
-
 
 
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
@@ -143,12 +140,11 @@
           };
 
           let chooseProductPrice = option.optionId[optionId].price;
-
+          console.log(option.optionId[optionId].default);
 
           if (optionSelected && !option.defualt) {
             price += chooseProductPrice;
-          }
-          if (option.defualt) {
+          } else if (option.optionId[optionId].default) {
             price -= chooseProductPrice;
 
           }
@@ -159,21 +155,12 @@
       thisProduct.priceElem.innerHTML = price;
     }
 
-
-
-
-
-
-
   }
-
-
-
   const app = {
 
     initMenu: function () {
       const thisApp = this;
-      /* console.log('thisApp.data', thisApp.data); */
+
       for (let productData in thisApp.data.products) {
         new Product(productData, thisApp.data.products[productData]);
 
@@ -185,11 +172,6 @@
     },
     init: function () {
       const thisApp = this;
-      /* console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates); */
       thisApp.initData();
       thisApp.initMenu();
 
