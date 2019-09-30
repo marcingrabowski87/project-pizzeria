@@ -40,13 +40,13 @@
     },
   };
 
-  const settings = {
+  /* const settings = {
     amountWidget: {
       defaultValue: 1,
       defaultMin: 1,
       defaultMax: 9,
-    }
-  };
+    } */
+  /* }; */
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -79,6 +79,9 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+
+
 
     }
 
@@ -103,6 +106,8 @@
     }
     initOrderForm() {
       const thisProduct = this;
+
+
       thisProduct.form.addEventListener('submit', function (event) {
         event.preventDefault();
         thisProduct.prcessOrder();
@@ -122,38 +127,66 @@
 
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
+      /* console.log(formData); */
 
       let price = thisProduct.data.price;
+      let allImagesProducts = thisProduct.imageWrapper.querySelectorAll('img');
 
+      const chekProduct = [];
       for (let paramId in thisProduct.data.params) {
 
-        const param = {
-          paramId: thisProduct.data.params
-        }
+        chekProduct.push(formData[paramId]);
+
         for (let optionId in thisProduct.data.params[paramId].options) {
 
 
           const optionSelected = formData.hasOwnProperty(paramId) && formData[paramId].indexOf(optionId) > -1;
-
+          /* console.log(optionSelected); */
           const option = {
             optionId: thisProduct.data.params[paramId].options
           };
 
           let chooseProductPrice = option.optionId[optionId].price;
-          console.log(option.optionId[optionId].default);
 
           if (optionSelected && !option.defualt) {
             price += chooseProductPrice;
+
           } else if (option.optionId[optionId].default) {
             price -= chooseProductPrice;
 
           }
 
+
+          for (let singleImageProduct of allImagesProducts) {
+            if (optionSelected) {
+              let singleImageProductClass = singleImageProduct.getAttribute('class');
+
+              let arrayProductAndOptions = singleImageProductClass.split('-');
+              /* console.log(arrayProductAndOptions) */
+
+
+
+
+              if (formData[paramId].indexOf(arrayProductAndOptions[arrayProductAndOptions.length - 1]) > -1) {
+
+                singleImageProduct.classList.add(classNames.menuProduct.imageVisible);
+                chekProduct.push(formData[paramId]);
+                /*  console.log("zaznaczona opcja", chekProduct); */
+
+              }
+
+            }
+          }
+
         }
+        console.log("zaznaczona opcja", chekProduct);
       }
 
       thisProduct.priceElem.innerHTML = price;
     }
+
+
+
 
   }
   const app = {
@@ -179,5 +212,4 @@
   };
 
   app.init();
-
 }
