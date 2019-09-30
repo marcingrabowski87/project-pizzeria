@@ -157,12 +157,15 @@
           }
 
 
+
+
+
           for (let singleImageProduct of allImagesProducts) {
             if (optionSelected) {
               let singleImageProductClass = singleImageProduct.getAttribute('class');
 
               let arrayProductAndOptions = singleImageProductClass.split('-');
-              /* console.log(arrayProductAndOptions) */
+             
 
 
 
@@ -171,7 +174,7 @@
 
                 singleImageProduct.classList.add(classNames.menuProduct.imageVisible);
                 chekProduct.push(formData[paramId]);
-                /*  console.log("zaznaczona opcja", chekProduct); */
+                
 
               }
 
@@ -179,7 +182,7 @@
           }
 
         }
-        console.log("zaznaczona opcja", chekProduct);
+        /* console.log("zaznaczona opcja", chekProduct); */
       }
 
       thisProduct.priceElem.innerHTML = price;
