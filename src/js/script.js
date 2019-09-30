@@ -132,10 +132,10 @@
       let price = thisProduct.data.price;
       let allImagesProducts = thisProduct.imageWrapper.querySelectorAll('img');
 
-      const chekProduct = [];
+      
       for (let paramId in thisProduct.data.params) {
 
-        chekProduct.push(formData[paramId]);
+        
 
         for (let optionId in thisProduct.data.params[paramId].options) {
 
@@ -166,14 +166,10 @@
 
               let arrayProductAndOptions = singleImageProductClass.split('-');
              
-
-
-
-
               if (formData[paramId].indexOf(arrayProductAndOptions[arrayProductAndOptions.length - 1]) > -1) {
 
                 singleImageProduct.classList.add(classNames.menuProduct.imageVisible);
-                chekProduct.push(formData[paramId]);
+               
                 
 
               }
