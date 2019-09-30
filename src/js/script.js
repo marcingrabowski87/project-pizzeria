@@ -130,8 +130,7 @@
       /* console.log(formData); */
 
       let price = thisProduct.data.price;
-      let allImagesProducts = thisProduct.imageWrapper.querySelectorAll('img');
-
+    
       
       for (let paramId in thisProduct.data.params) {
 
@@ -155,30 +154,27 @@
             price -= chooseProductPrice;
 
           }
+let images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
 
+if(optionSelected){
 
-
-
-
-          for (let singleImageProduct of allImagesProducts) {
-            if (optionSelected) {
-              let singleImageProductClass = singleImageProduct.getAttribute('class');
-
-              let arrayProductAndOptions = singleImageProductClass.split('-');
-             
-              if (formData[paramId].indexOf(arrayProductAndOptions[arrayProductAndOptions.length - 1]) > -1) {
-
-                singleImageProduct.classList.add(classNames.menuProduct.imageVisible);
-               
-                
-
-              }
-
-            }
-          }
+console.log(images);
+for (let image of images)
+{
+  image.classList.add('active');
+}
 
         }
-        /* console.log("zaznaczona opcja", chekProduct); */
+        else{
+          for (let image of images)
+{
+  image.classList.remove('active');
+}
+        }
+         
+
+        }
+      
       }
 
       thisProduct.priceElem.innerHTML = price;
