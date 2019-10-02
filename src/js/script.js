@@ -40,13 +40,13 @@
     },
   };
 
-  /* const settings = {
+  const settings = {
     amountWidget: {
       defaultValue: 1,
       defaultMin: 1,
       defaultMax: 9,
-    } */
-  /* }; */
+    }
+  };
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
@@ -60,6 +60,7 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
       thisProduct.processOrder();
 
     }
@@ -80,7 +81,7 @@
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
 
 
     }
@@ -130,11 +131,11 @@
       /* console.log(formData); */
 
       let price = thisProduct.data.price;
-    
-      
+
+
       for (let paramId in thisProduct.data.params) {
 
-        
+
 
         for (let optionId in thisProduct.data.params[paramId].options) {
 
@@ -154,35 +155,105 @@
             price -= chooseProductPrice;
 
           }
-let images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
+          const images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
 
-if(optionSelected){
+          if (optionSelected) {
 
-console.log(images);
-for (let image of images)
-{
-  image.classList.add('active');
-}
+            for (let image of images) {
 
+              image.classList.add('active');
+            }
+
+          } else {
+            for (let image of images) {
+              image.classList.remove('active');
+            }
+          }
         }
-        else{
-          for (let image of images)
-{
-  image.classList.remove('active');
-}
-        }
-         
 
-        }
-      
       }
-
+      price *= thisProduct.amountWidget.value;
       thisProduct.priceElem.innerHTML = price;
+    }
+    initAmountWidget() {
+      const thisProduct = this;
+      thisProduct.amountWidget = new AmoungWidget(thisProduct.amountWidgetElem);
+      thisProduct.amountWidgetElem.addEventListener('updated', function () {
+        thisProduct.processOrder();
+      });
     }
 
 
 
+  }
 
+  class AmoungWidget {
+
+    constructor(element) {
+
+      const thisWidget = this;
+      thisWidget.getElements(element);
+      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.initActions();
+      /*  console.log("AmoungWidget", thisWidget);
+       console.log("constructor argument", element); */
+    }
+    getElements(element) {
+      const thisWidget = this;
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrase = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+      thisWidget.input.value = settings.amountWidget.defaultValue;
+
+    }
+    setValue(value) {
+      const thisWidget = this;
+      const newValue = parseInt(value);
+      if (newValue !== parseInt(thisWidget.value) && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax) {
+        thisWidget.value = newValue;
+        thisWidget.announce();
+      }
+
+
+
+      thisWidget.input.value = thisWidget.value;
+    }
+    initActions() {
+
+
+      const thisWidget = this;
+
+      thisWidget.input.addEventListener('change', function (e) {
+        e.preventDefault();
+
+
+
+        thisWidget.setValue(thisWidget.input.value);
+
+      });
+
+      thisWidget.linkDecrease.addEventListener('click', function (e) {
+        console.log(thisWidget.value);
+        e.preventDefault();
+        thisWidget.setValue(thisWidget.value - 1);
+
+      });
+
+      thisWidget.linkIncrase.addEventListener('click', function (e) {
+
+        console.log(thisWidget.value);
+        e.preventDefault();
+        thisWidget.setValue(parseInt(thisWidget.value) + 1);
+
+      });
+
+    }
+    announce() {
+      const thisWidget = this;
+      const event = new Event('updated');
+      thisWidget.element.dispatchEvent(event);
+    }
   }
   const app = {
 
@@ -202,6 +273,11 @@ for (let image of images)
       const thisApp = this;
       thisApp.initData();
       thisApp.initMenu();
+      /*  console.log('****App starting***');
+       console.log('thisApp', thisApp);
+       console.log('ClassNames', classNames);
+       console.log('setings', settings);
+       console.log('templates', templates); */
 
     },
   };
