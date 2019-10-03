@@ -6,6 +6,7 @@
   const select = {
     templateOf: {
       menuProduct: '#template-menu-product',
+      cartProduct: '#template-cart-product',
     },
     containerOf: {
       menu: '#product-list',
@@ -26,10 +27,28 @@
     },
     widgets: {
       amount: {
-        input: 'input[name="amount"]',
+        input: 'input.amount',
         linkDecrease: 'a[href="#less"]',
         linkIncrease: 'a[href="#more"]',
       },
+    },
+    cart: {
+      productList: '.cart__order-summary',
+      toggleTrigger: '.cart__summary',
+      toatalNumber: '.cart__total-number',
+      totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-name',
+      subtotalPrice: 'cart__order-subtotal .cart__order-price-sum strong',
+      deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
+      form: '.cart__order',
+      formSubmit: '.cart__order [type="submit"]',
+      phone: '[name="phone"]',
+      address: '[name=address]',
+    },
+    cartProduct: {
+      amountWidget: '.widget-amount',
+      price: 'cart__product-price',
+      edit: '[href="#edit"]',
+      remove: '[href="#remove"]',
     },
   };
 
@@ -38,6 +57,9 @@
       wrapperActive: 'active',
       imageVisible: 'active',
     },
+    cart: {
+      wrapperActive: 'active',
+    }
   };
 
   const settings = {
@@ -45,11 +67,15 @@
       defaultValue: 1,
       defaultMin: 1,
       defaultMax: 9,
-    }
+    },
+    cart: {
+      defaultDeliveryFee: 20,
+    },
   };
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
+    cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   };
   class Product {
     constructor(id, data) {
@@ -122,6 +148,7 @@
       thisProduct.cartButton.addEventListener('click', function (event) {
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
     }
     processOrder() {
@@ -129,13 +156,14 @@
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
       /* console.log(formData); */
-
+      thisProduct.params = {};
       let price = thisProduct.data.price;
 
 
       for (let paramId in thisProduct.data.params) {
 
-
+        let param = thisProduct.data.params[paramId];
+        /*  console.log('param', param); */
 
         for (let optionId in thisProduct.data.params[paramId].options) {
 
@@ -158,7 +186,13 @@
           const images = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
 
           if (optionSelected) {
-
+            if (!thisProduct.params[paramId]) {
+              thisProduct.params[paramId] = {
+                label: param.label,
+                options: {},
+              };
+            }
+            thisProduct.params[paramId].options[optionId] = option.optionId[optionId].label;
             for (let image of images) {
 
               image.classList.add('active');
@@ -172,8 +206,12 @@
         }
 
       }
-      price *= thisProduct.amountWidget.value;
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.priceSingle = price;
+      thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidget.value;
+      thisProduct.priceElem.innerHTML = thisProduct.price;
+      /* price *= thisProduct.amountWidget.value;
+      thisProduct.priceElem.innerHTML = price; */
+      /*  console.log(thisProduct.params); */
     }
     initAmountWidget() {
       const thisProduct = this;
@@ -182,7 +220,12 @@
         thisProduct.processOrder();
       });
     }
-
+    addToCart() {
+      const thisProduct = this;
+      thisProduct.name = thisProduct.data.name;
+      thisProduct.amount = thisProduct.amountWidget.value;
+      app.cart.add(thisProduct);
+    }
 
 
   }
@@ -234,7 +277,7 @@
       });
 
       thisWidget.linkDecrease.addEventListener('click', function (e) {
-        console.log(thisWidget.value);
+
         e.preventDefault();
         thisWidget.setValue(thisWidget.value - 1);
 
@@ -242,7 +285,7 @@
 
       thisWidget.linkIncrase.addEventListener('click', function (e) {
 
-        console.log(thisWidget.value);
+
         e.preventDefault();
         thisWidget.setValue(parseInt(thisWidget.value) + 1);
 
@@ -253,6 +296,42 @@
       const thisWidget = this;
       const event = new Event('updated');
       thisWidget.element.dispatchEvent(event);
+    }
+  }
+  class Cart {
+    constructor(element) {
+      const thisCart = this;
+      thisCart.products = [];
+      thisCart.getElements(element);
+      thisCart.initActions();
+      console.log('new cart', thisCart);
+    }
+    getElements(element) {
+      const thisCart = this;
+      thisCart.dom = {};
+      thisCart.dom.wrapper = element;
+      thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+    }
+    initActions() {
+      const thisCart = this;
+      thisCart.dom.toggleTrigger.addEventListener('click', function () {
+        thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
+      });
+    }
+    add(menuProduct) {
+
+      const thisCart = this;
+      const generatedHTML = templates.cartProduct(menuProduct);
+
+      const generatedDom = utils.createDOMFromHTML(generatedHTML);
+
+      thisCart.dom.productList.appendChild(generatedDom);
+      console.log(thisCart.dom.productList);
+
+
+
+      console.log('adding product', menuProduct);
     }
   }
   const app = {
@@ -269,10 +348,17 @@
       const thisApp = this;
       thisApp.data = dataSource;
     },
+    initCart: function () {
+      const thisApp = this;
+      const cartElement = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElement);
+
+    },
     init: function () {
       const thisApp = this;
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
       /*  console.log('****App starting***');
        console.log('thisApp', thisApp);
        console.log('ClassNames', classNames);
