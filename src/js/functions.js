@@ -42,6 +42,7 @@ Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
 utils.convertDataSourceToDbJson = function () {
   const productJson = [];
   for (let key in dataSource.products) {
+
     productJson.push(Object.assign({
       id: key
     }, dataSource.products[key]));
