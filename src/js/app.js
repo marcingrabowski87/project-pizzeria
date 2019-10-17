@@ -50,17 +50,19 @@ const app = {
 
   },
 
-  /* initPages: function () {
+  initPages: function () {
     const thisApp = this;
-    thisApp.pages: Array.from(document.querySelector(select.containerof.pages).children);
-  }, */
+    thisApp.pages = Array.from(document.querySelector(select.containerOf.pages).children);
+    thisApp.navLinks = Array.from(document.querySelectorAll(select.nav.links));
+    thisApp.activePage(thisApp.pages[0].id);
+  },
 
 
 
 
   init: function () {
     const thisApp = this;
-    /*   thisApp.initPages(); */
+    thisApp.initPages();
     thisApp.initData();
     /* thisApp.initMenu(); */
     thisApp.initCart();
