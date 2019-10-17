@@ -1,6 +1,6 @@
-/* global Handlebars, dataSource */
+/* global Handlebars */
 
-const utils = {}; // eslint-disable-line no-unused-vars
+export const utils = {}; // eslint-disable-line no-unused-vars
 
 utils.createDOMFromHTML = function (htmlString) {
   let div = document.createElement('div');
@@ -41,10 +41,12 @@ Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
 });
 utils.convertDataSourceToDbJson = function () {
   const productJson = [];
+  // eslint-disable-next-line no-undef
   for (let key in dataSource.products) {
 
     productJson.push(Object.assign({
       id: key
+      // eslint-disable-next-line no-undef
     }, dataSource.products[key]));
   }
 
