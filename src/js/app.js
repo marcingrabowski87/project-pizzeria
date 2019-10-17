@@ -49,11 +49,22 @@ const app = {
     });
 
   },
+
+  initPages: function () {
+    const thisApp = this;
+    thisApp.pages: Array.from(document.querySelector(select.containerof.pages).children);
+  },
+
+
+
+
   init: function () {
     const thisApp = this;
+    thisApp.initPages();
     thisApp.initData();
     /* thisApp.initMenu(); */
     thisApp.initCart();
+
     /*  console.log('****App starting***');
      console.log('thisApp', thisApp);
      console.log('ClassNames', classNames);
