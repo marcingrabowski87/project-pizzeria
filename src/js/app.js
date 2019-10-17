@@ -50,17 +50,17 @@ const app = {
 
   },
 
-  initPages: function () {
+  /* initPages: function () {
     const thisApp = this;
     thisApp.pages: Array.from(document.querySelector(select.containerof.pages).children);
-  },
+  }, */
 
 
 
 
   init: function () {
     const thisApp = this;
-    thisApp.initPages();
+    /*   thisApp.initPages(); */
     thisApp.initData();
     /* thisApp.initMenu(); */
     thisApp.initCart();
