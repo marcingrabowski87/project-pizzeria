@@ -28,8 +28,8 @@ export class AmoungWidget {
     const thisWidget = this;
     const newValue = parseInt(value);
 
-
-    if (newValue !== parseInt(thisWidget.value) && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax) {
+    let condition = newValue !== parseInt(thisWidget.value) && newValue >= settings.amountWidget.defaultMin;
+    if (condition && newValue <= settings.amountWidget.defaultMax) {
       thisWidget.value = newValue;
       thisWidget.announce();
     }

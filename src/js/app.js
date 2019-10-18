@@ -8,8 +8,13 @@ import {
 } from './components/Cart.js';
 import {
   select,
-  settings
+  settings,
+  classNames
 } from './settings.js';
+
+import {
+  Booking
+} from './components/Booking.js';
 
 
 const app = {
@@ -52,12 +57,48 @@ const app = {
 
   initPages: function () {
     const thisApp = this;
-    thisApp.pages = Array.from(document.querySelector(select.containerOf.pages).children);
+    thisApp.pages = Array.from(document.body.querySelector(select.containerOf.pages).children);
+
     thisApp.navLinks = Array.from(document.querySelectorAll(select.nav.links));
-    thisApp.activePage(thisApp.pages[0].id);
+    /* thisApp.activePage(thisApp.pages[0].id); */
+    let pagesMatchingHash = [];
+    if (window.location.hash.length > 2) {
+      const idFromHash = window.location.hash.replace('#/', '');
+
+      pagesMatchingHash = thisApp.pages.filter(function (page) {
+        return page.id === idFromHash;
+      });
+
+    }
+
+    thisApp.activePage(pagesMatchingHash.length ? pagesMatchingHash[0].id : thisApp.pages[0].id);
+    for (let link of thisApp.navLinks) {
+      link.addEventListener('click', function (e) {
+        const clickedElement = this;
+        e.preventDefault();
+        thisApp.activePage(clickedElement.getAttribute('href').replace('#', ''));
+      });
+    }
   },
 
+  activePage(pageId) {
+    const thisApp = this;
+    for (let link of thisApp.navLinks) {
 
+      link.classList.toggle(classNames.nav.active, link.getAttribute('href') === '#' + pageId);
+    }
+    for (let page of thisApp.pages) {
+      page.classList.toggle(classNames.nav.active, page.id === pageId);
+    }
+
+    window.location.hash = '#/' + pageId;
+  },
+
+  initBooking() {
+    /*  const thisApp = this; */
+    const containerBooking = document.querySelector(select.containerOf.booking);
+    new Booking(containerBooking);
+  },
 
 
   init: function () {
@@ -66,6 +107,7 @@ const app = {
     thisApp.initData();
     /* thisApp.initMenu(); */
     thisApp.initCart();
+    thisApp.initBooking();
 
     /*  console.log('****App starting***');
      console.log('thisApp', thisApp);
