@@ -25,20 +25,20 @@ export class Booking {
     const thisBooking = this;
     thisBooking.dom = {};
     thisBooking.dom.wrapper = element;
-    thisBooking.dom.peopleAmount = thisBooking.dom.wrapper.querySelector(select.booking.peopleAmount);
-
-    thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
-
-    console.log(thisBooking.dom);
 
     const elementHtml = templates.bookingWidget(thisBooking.dom.wrapper);
     const visualHtml = utils.createDOMFromHTML(elementHtml);
     element.appendChild(visualHtml);
+
+    thisBooking.dom.peopleAmount = element.querySelector(select.booking.peopleAmount);
+    thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
+
+
   }
   initWidgets() {
     const thisBooking = this;
 
-    /* thisBooking.peopleAmount = new AmoungWidget(thisBooking.dom.peopleAmount);
-    thisBooking.hoursAmount = new AmoungWidget(thisBooking.dom.hoursAmount); */
+    thisBooking.peopleAmount = new AmoungWidget(thisBooking.dom.peopleAmount);
+    thisBooking.hoursAmount = new AmoungWidget(thisBooking.dom.hoursAmount);
   }
 }
