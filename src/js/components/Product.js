@@ -8,7 +8,7 @@ import {
 } from '../utils.js';
 import {
   AmoungWidget
-} from './amoungWidget.js';
+} from './AmoungWidget.js';
 
 
 export class Product {

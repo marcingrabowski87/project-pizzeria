@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* "test:html": "globstar nu-html-checker dist/*.html", */
 import {
   Product
@@ -9,6 +10,7 @@ import {
 import {
   select,
   settings,
+
   classNames
 } from './settings.js';
 
@@ -16,21 +18,23 @@ import {
   Booking
 } from './components/Booking.js';
 
-
+/* import {
+  dataSource
+} from './data.js';*/
 const app = {
 
   initMenu: function () {
     const thisApp = this;
 
     for (let productData in thisApp.data.products) {
-      /* new Product(productData, thisApp.data.products[productData]); */
+      /*  new Product(productData, thisApp.data.products[productData]); */
       new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
 
     }
   },
   initData: function () {
     const thisApp = this;
-    /*  thisApp.data = dataSource; */
+    /* thisApp.data = dataSource; */
     thisApp.data = {};
     const url = settings.db.url + '/' + settings.db.product;
     fetch(url)
@@ -38,7 +42,7 @@ const app = {
         return rawResponse.json();
       })
       .then(function (parsedResponse) {
-        /*  console.log('parsedResponse', parsedResponse); */
+
         thisApp.data.products = parsedResponse;
         thisApp.initMenu();
       });
@@ -105,7 +109,7 @@ const app = {
     const thisApp = this;
     thisApp.initPages();
     thisApp.initData();
-    /* thisApp.initMenu(); */
+    /* thisApp.initMenu();  */
     thisApp.initCart();
     thisApp.initBooking();
 
