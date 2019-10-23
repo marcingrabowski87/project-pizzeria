@@ -10,6 +10,11 @@ import {
   AmoungWidget
 } from './AmoungWidget.js';
 
+import {
+  DatePicker
+} from './DatePicker.js';
+
+
 
 export class Booking {
   constructor(element) {
@@ -22,6 +27,7 @@ export class Booking {
   }
 
   render(element) {
+
     const thisBooking = this;
     thisBooking.dom = {};
     thisBooking.dom.wrapper = element;
@@ -32,7 +38,7 @@ export class Booking {
 
     thisBooking.dom.peopleAmount = element.querySelector(select.booking.peopleAmount);
     thisBooking.dom.hoursAmount = thisBooking.dom.wrapper.querySelector(select.booking.hoursAmount);
-
+    thisBooking.dom.datePicker = element.querySelector(select.widgets.datePicker.wrapper);
 
   }
   initWidgets() {
@@ -40,5 +46,7 @@ export class Booking {
 
     thisBooking.peopleAmount = new AmoungWidget(thisBooking.dom.peopleAmount);
     thisBooking.hoursAmount = new AmoungWidget(thisBooking.dom.hoursAmount);
+    thisBooking.datePicker = new DatePicker(thisBooking.dom.datePicker);
+
   }
 }

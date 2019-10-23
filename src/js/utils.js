@@ -67,6 +67,7 @@ utils.hourToNumber = function (hour) {
 };
 
 utils.dateToStr = function (dateObj) {
+
   return dateObj.toISOString().slice(0, 10);
 };
 
