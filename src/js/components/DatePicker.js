@@ -17,7 +17,9 @@ export class DatePicker extends BaseWidget {
     thisWidget.dom.wrapper = wrapper;
     thisWidget.dom.input = thisWidget.dom.wrapper.querySelector(select.widgets.datePicker.input);
     thisWidget.initPlugin();
-
+    /*  thisWidget.isValid();
+     thisWidget.renderValue();
+     thisWidget.parseValue(thisWidget); */
   }
 
 
@@ -45,22 +47,30 @@ export class DatePicker extends BaseWidget {
         firstDayOfWeek: 1
       },
       onChange: function (dateStr) {
-        console.log(dateStr);
-        thisWidget.value = dateStr;
-        thisWidget.renderValue();
+        let fullDate = new Date(dateStr);
+        let day = fullDate.getDate();
+
+        let month = fullDate.getMonth() + 1;
+
+        let year = fullDate.getFullYear();
+        thisWidget.value = year + '' + month + '' + day;
+
       }
 
     };
+
 
     // eslint-disable-next-line no-undef
     flatpickr(thisWidget.dom.input, options);
 
   }
+  parseValue(newValue) {
+    return newValue;
 
-
-
-  renderValue() {
-    const thisWidget = this;
-    console.log('widget value:', thisWidget.value);
   }
+  isValid() {
+    return true;
+  }
+
+
 }
