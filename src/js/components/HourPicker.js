@@ -19,14 +19,14 @@ export class HourPicker extends BaseWidget {
     thisWidget.dom.output = thisWidget.dom.wrapper.querySelector(select.widgets.hourPicker.output);
 
     thisWidget.initPlugin();
-    thisWidget.value = this.value;
+    thisWidget.value = thisWidget.dom.input.value;
   }
   initPlugin() {
     const thisWidget = this;
     // eslint-disable-next-line no-undef
     rangeSlider.create(thisWidget.dom.input);
     thisWidget.dom.input.addEventListener('input', function () {
-      thisWidget.value = this.value;
+      thisWidget.value = thisWidget.dom.input.value;
     });
   }
 
