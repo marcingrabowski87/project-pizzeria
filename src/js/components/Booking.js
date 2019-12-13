@@ -1,4 +1,4 @@
-/*import {
+import {
   select,
   templates
 } from '../settings.js';
@@ -11,9 +11,9 @@ import {
 } from './AmoungWidget.js';
 
 
-export class Booking {
+/*export class Booking {
   constructor(element) {
-    /* console.log(element); */
+   
     const thisBooking = this;
     thisBooking.element = element;
     thisBooking.render(thisBooking.element);
