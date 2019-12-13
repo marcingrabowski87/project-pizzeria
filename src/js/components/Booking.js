@@ -1,4 +1,4 @@
-import {
+/*import {
   select,
   templates
 } from '../settings.js';
@@ -42,3 +42,4 @@ export class Booking {
     thisBooking.hoursAmount = new AmoungWidget(thisBooking.dom.hoursAmount);
   }
 }
+*/
