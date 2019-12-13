@@ -32,5 +32,5 @@
     font-weight: $font-light;
     font-style: italic;
   }
-  .main-nav a{display:none;}
+  &.main-nav{display:none;}
 }
